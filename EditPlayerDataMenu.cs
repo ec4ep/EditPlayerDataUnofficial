@@ -16,9 +16,8 @@ using Il2CppAssets.Scripts.Models.Store.Loot;
 using Il2CppAssets.Scripts.Unity;
 using Il2CppAssets.Scripts.Unity.Menu;
 using Il2CppAssets.Scripts.Unity.Player;
-using Il2CppAssets.Scripts.Unity.UI_New.Achievements;
+using Il2CppAssets.Scripts.Unity.UI_New.Achievements;   
 using Il2CppAssets.Scripts.Unity.UI_New.ChallengeEditor;
-using Il2CppAssets.Scripts.Unity.UI_New.Legends;
 using Il2CppAssets.Scripts.Unity.UI_New.Popups;
 using Il2CppAssets.Scripts.Utils;
 using Il2CppNinjaKiwi.Common;
@@ -142,6 +141,7 @@ public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
             "btd6_fasttrackpack",
             () => GetPlayer().Data.unlockedFastTrack,
             t => GetPlayer().Data.unlockedFastTrack = t));
+        general.Add(new PurchasePlayerDataSetting("Unlocked Frontier Legends", VanillaSprites.SheriffBadge, "btd6_legendsfrontier"));
         general.Add(new PurchasePlayerDataSetting("Unlocked Rogue Legends", VanillaSprites.LegendsBtn, "btd6_legendsrogue"));
         general.Add(new PurchasePlayerDataSetting("Unlocked Map Editor", VanillaSprites.MapEditorBtn, "btd6_mapeditorsupporter_new"));
     }
@@ -247,8 +247,8 @@ public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
                     }
                 }
 
-                GetPlayer().SetLegendBadges(nameof(LegendsType.Rogue), false, Mathf.Min(t, feats.Count));
-                GetPlayer().SetLegendBadges(nameof(LegendsType.Rogue), true, t >= feats.Count ? 1 : 0);
+                GetPlayer().SetLegendBadges("Rogue", false, Mathf.Min(t, feats.Count));
+                GetPlayer().SetLegendBadges("Rogue", true, t >= feats.Count ? 1 : 0);
             }));
     }
 

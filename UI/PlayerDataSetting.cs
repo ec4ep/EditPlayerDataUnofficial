@@ -252,7 +252,8 @@ public class BoolPlayerDataSetting(
 }
 
 public class ArtifactPlayerDataSetting(ArtifactModelBase artifact)
-    : BoolPlayerDataSetting(LocalizationManager.Instance.Format(artifact.nameLocKey, Rarities[artifact.tier]),
+    : BoolPlayerDataSetting(LocalizationManager.Instance.Format(artifact.nameLocKey,
+        Rarities[Math.Min(artifact.tier, Rarities.Length - 1)]),
         "", false, () => Game.Player.Data.legendsData.unlockedStarterArtifacts.Contains(artifact.ArtifactName),
         t =>
         {
