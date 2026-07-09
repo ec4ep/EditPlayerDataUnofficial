@@ -34,23 +34,24 @@ namespace EditPlayerData.UI;
 
 public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
 {
-    private static readonly Dictionary<string, List<PlayerDataSetting>> Settings = new()
-    {
-        { "General", new List<PlayerDataSetting>() },
-        { "Trophy Store", new List<PlayerDataSetting>() },
-        { "Maps", new List<PlayerDataSetting>() },
-        { "Maps - Coop", new List<PlayerDataSetting>() },
-        { "Towers", new List<PlayerDataSetting>() },
-        { "Powers", new List<PlayerDataSetting>() },
-        { "Instas", new List<PlayerDataSetting>() },
-        { "Banners", new List<PlayerDataSetting>() },
-        { "Artifacts", new List<PlayerDataSetting>() },
-        { "Online Modes", new List<PlayerDataSetting>() },
-        { "Achievements", new List<PlayerDataSetting>() }
-    };
+    private static readonly Dictionary<string, List<PlayerDataSetting>> Settings;
 
     static EditPlayerDataMenu()
     {
+        var categories = new[]
+        {
+            "General", "Trophy Store", "Skins", "Maps",
+            "Maps - Coop", "Towers", "Powers", "Instas", 
+            "Banners", "Artifacts", "Online Modes", "Achievements"
+        };
+
+        Settings = new Dictionary<string, List<PlayerDataSetting>>(categories.Length);
+
+        foreach (var category in categories)
+        {
+            Settings.Add(category, new List<PlayerDataSetting>());
+        }
+
         InitGeneralSettings();
     }
 
@@ -108,7 +109,7 @@ public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
                 if (t)
                 {
                     skins.Add("AdoraSheRa");
-                    data.purchase?.AddOneTimePurchaseItem("btd6_sherapremiumpack");
+                    data.purchase?.AddOneTimePurchaseItem("btd6_sherapremiumpack", LootFrom.iap);
                 }
                 else
                 {
@@ -142,7 +143,7 @@ public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
             "btd6_fasttrackpack",
             () => GetPlayer().Data.unlockedFastTrack,
             t => GetPlayer().Data.unlockedFastTrack = t));
-        general.Add(new PurchasePlayerDataSetting("Unlocked Rogue Legends", VanillaSprites.LegendsBtn, "btd6_legendsrogue"));
+        general.Add(new PurchasePlayerDataSetting("Unlocked Rogue Legends", VanillaSprites.LegendsBtnFeatureRogue, "btd6_legendsrogue"));
         general.Add(new PurchasePlayerDataSetting("Unlocked Map Editor", VanillaSprites.MapEditorBtn, "btd6_mapeditorsupporter_new"));
     }
 
