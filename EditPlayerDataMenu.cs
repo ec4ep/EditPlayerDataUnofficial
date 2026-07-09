@@ -51,8 +51,8 @@ public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
                     "btd6_fasttrackpack",
                     () => GetPlayer().Data.unlockedFastTrack,
                     t => GetPlayer().Data.unlockedFastTrack = t),
-                new PurchasePlayerDataSetting("Unlocked Rogue Legends", VanillaSprites.LegendRogueShop, "btd6_legendsrogue", LootFrom.legendFeat),
-                new PurchasePlayerDataSetting("Unlocked Frontier Legends", VanillaSprites.LegendFrontierShop, "btd6_legendsfrontier", LootFrom.legendFeat),
+                new PurchasePlayerDataSetting("Unlocked Rogue Legends", VanillaSprites.LegendsBtnFeatureRogue, "btd6_legendsrogue", LootFrom.legendFeat),
+                new PurchasePlayerDataSetting("Unlocked Frontier Legends", VanillaSprites.LegendsBtnFeatureFrontier, "btd6_legendsfrontier", LootFrom.legendFeat),
                 new PurchasePlayerDataSetting("Unlocked Map Editor", VanillaSprites.MapEditorBtn, "btd6_mapeditorsupporter_new", LootFrom.iap),
                 new NumberPlayerDataSetting("Monkey Money", VanillaSprites.MonkeyMoneyShop, 0,
                     () => GetPlayer().Data.monkeyMoney.ValueInt, t => GetPlayer().Data.monkeyMoney.Value = t),
@@ -195,6 +195,9 @@ public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
         },
         {
             "Online Modes", new List<PlayerDataSetting>() // uses a loop to reduce hard-coded values
+        },
+        {
+            "Achievements", new List<PlayerDataSetting>() // uses a loop to reduce hard-coded values
         }
     };
 
@@ -271,6 +274,10 @@ public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
         Settings["Instas"].Clear();
         Settings["Banners"].Clear();
         Settings["Online Modes"].Clear();
+
+
+        foreach (var achievement in GameData.Instance.achievements.achievements)
+            Settings["Achievements"].Add(new AchievementPlayerDataSetting(achievement));
         
         foreach (var item in GameData.Instance.trophyStoreItems.GetAllItems())
         {
@@ -669,6 +676,17 @@ public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
                         });
                         break;
                     }
+                    case "Achievements":
+                    {
+                        BoolPlayerDataSetting.ShowPopup(screen, false, n =>
+                        {
+                            foreach (var setting in Settings[_category].Select(s => s as AchievementPlayerDataSetting))
+                                setting!.Setter(n);
+                            UpdateVisibleEntries();
+                            AchievementPlayerDataSetting.ShowRestartConfirmation(screen);
+                        });
+                        break;
+                    }
                 }
             });
         })).AddText(new Info("SetAllText", 650, 200), "Set All", 60);
@@ -710,7 +728,7 @@ public class EditPlayerDataMenu : ModGameMenu<ContentBrowser>
         var anyUnlockable = Settings[_category].Any(s => !s.IsUnlocked());
         _topArea.GetDescendent<ModHelperButton>("UnlockAll")?.SetActive(anyUnlockable);
 
-        var canAddAll = _category is "Powers" or "Instas" or "Artifacts";
+        var canAddAll = _category is "Powers" or "Instas" or "Artifacts" or "Achievements";
         _topArea.GetDescendent<ModHelperButton>("SetAll")?.SetActive(!anyUnlockable && canAddAll);
         
         _topArea.GetDescendent<ModHelperPanel>("Special Button Filler")?.SetActive(!anyUnlockable && !canAddAll);
